@@ -4,6 +4,16 @@ title: "[Feedback]: _Please enter customerName-EngagementDetails-Year_"
 labels: ["feedback", "partner engagement", "metrics"]
 assignees: []
 body:
+
+  - type: input
+    id: engagement_name
+    attributes:
+      label: Engagement Name
+      description: The name or title of the engagement
+      placeholder: "GitHub Enterprise Cloud Implementation"
+    validations:
+      required: true
+      
   - type: dropdown
     id: partner_name
     attributes:
@@ -47,15 +57,6 @@ body:
         - Migration Support
         - Copilot Adoption
         - Other
-    validations:
-      required: true
-      
-  - type: input
-    id: engagement_name
-    attributes:
-      label: Engagement Name
-      description: The name or title of the engagement
-      placeholder: "GitHub Enterprise Cloud Implementation"
     validations:
       required: true
       
