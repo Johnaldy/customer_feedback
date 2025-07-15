@@ -21,10 +21,8 @@ jobs:
         with:
           github-token: ${{ secrets.PROJECT_PAT }}
           script: |
-            // Get the issue number based on trigger
-            const issue_number = typeof github.event.inputs !== "undefined" && github.event.inputs.issue_number
-              ? parseInt(github.event.inputs.issue_number, 10)
-              : (typeof inputs !== "undefined" && inputs.issue_number ? parseInt(inputs.issue_number, 10) : context.issue.number);
+            // Get issue_number from inputs (passed via workflow_call or workflow_dispatch)
+            const issue_number = parseInt(process.env.ISSUE_NUMBER, 10);
 
             // Fetch the issue to get the node_id
             const { data: issue } = await github.rest.issues.get({
@@ -54,3 +52,5 @@ jobs:
             });
 
             console.log('Added issue', issue_number, 'to project board', projectId);
+        env:
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
