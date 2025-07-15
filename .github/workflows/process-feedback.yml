@@ -20,7 +20,6 @@ jobs:
             });
             const found = comments.data.some(c => c.body && c.body.includes('### Feedback Summary'));
             return found;
-        result-encoding: string
 
       - name: Exit if already processed
         if: steps.check_comment.outputs.result == 'true'
@@ -112,11 +111,6 @@ jobs:
                 title
               });
             }
-
-            // Set outputs for next job
-            return { avgScore, issue_number: context.issue.number };
-
-        result-encoding: json
 
       - name: Call Add-to-Project Workflow
         uses: actions/github-script@v7
