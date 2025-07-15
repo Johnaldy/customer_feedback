@@ -1,0 +1,56 @@
+name: Add Feedback Issue to Project Board
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to add'
+        required: true
+  workflow_call:
+    inputs:
+      issue_number:
+        required: true
+        type: number
+
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add issue to GitHub Project (Beta)
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_PAT }}
+          script: |
+            // Get the issue number based on trigger
+            const issue_number = typeof github.event.inputs !== "undefined" && github.event.inputs.issue_number
+              ? parseInt(github.event.inputs.issue_number, 10)
+              : (typeof inputs !== "undefined" && inputs.issue_number ? parseInt(inputs.issue_number, 10) : context.issue.number);
+
+            // Fetch the issue to get the node_id
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number
+            });
+
+            // Project V2 node ID from user
+            const projectId = "PVT_kwHOAiZwz84A96Ov";
+
+            // Add the issue to the project board (GitHub Projects v2)
+            await github.graphql(`
+              mutation($projectId:ID!, $contentId:ID!) {
+                addProjectV2ItemById(input: {
+                  projectId: $projectId,
+                  contentId: $contentId
+                }) {
+                  item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId,
+              contentId: issue.node_id
+            });
+
+            console.log('Added issue', issue_number, 'to project board', projectId);
