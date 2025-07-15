@@ -249,7 +249,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                title: `${context.payload.issue.title} [AVG: ${avgScore}]`
+                title: `${context.payload.issue.title} [Average Score: ${avgScore}]`
               });
             }
 
